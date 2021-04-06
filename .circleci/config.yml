@@ -9,12 +9,6 @@ jobs:
       - checkout
       - run: npm install
       - run: npm test
-  coverage:
-    docker:
-      - image: node:14
-    working_directory: ~/repo
-    steps:
-      - run: npm install
       - run: npm run coverage
       - store_artifacts:
           path: coverage
@@ -23,4 +17,12 @@ jobs:
       - image: node:14
     working_directory: ~/repo
     steps:
+      - checkout
       - run: npm build
+
+workflows:
+  version: 2
+  test_and_build:
+    jobs:
+      - test
+      - build
