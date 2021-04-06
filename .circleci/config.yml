@@ -1,9 +1,72 @@
-orbs:
-  node: circleci/node@4.0.0
+version: 2
 
-version: 2.1
+jobs:
+  test:
+    docker:
+      - image: node:14
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: 
+          name: Install node modules
+          command: npm install
+      - run: 
+          name: Run unit tests
+          command: npm test
+  coverage:
+    docker:
+      - image: node:14
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: 
+          name: Install node modules
+          command: npm install
+      - run:
+          name: Run coverage
+          command: npm run coverage
+      - store_artifacts:
+          path: coverage
+  
+  build:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Build docker image
+          command: docker build -t lucasbrocheton/gameoflife-nge-lbr .
+      - run:
+          name: Save docker image
+          command: docker save -o image.tar lucasbrocheton/gameoflife-nge-lbr
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./image.tar
+  push:
+    machine: true
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Load docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Login to docker hub
+          command: echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+      - run:
+          name: Push docker image to docker hub
+          command: docker push lucasbrocheton/gameoflife-nge-lbr
 
 workflows:
-  app-tests:
+  version: 2
+  workflow:
     jobs:
-      - node/test
+      - test
+      - coverage
+      - build:
+          requires:
+            - test
+            - coverage
+      - push:
+          requires:
+            - build
