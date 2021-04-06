@@ -3,23 +3,18 @@
     <div id="game">
       <div class="container">
         <h1 class="row skew-title">
-          <template v-for="i in name.length">
-            <span v-bind:key="i" v-if="name[i - 1] !== ' '">{{
-              name[i - 1]
-            }}</span>
-            <template v-else>&nbsp;</template>
-          </template>
+          {{ name }}
         </h1>
       </div>
       <div class="main">
         <div class="control-panel">
           <button @click="play" class="btn btn-sm">
-            <template v-if="!this.config.play"> Play </template>
-            <template v-else> Stop </template>
+            <template v-if="!this.config.play">Play</template>
+            <template v-else>Stop</template>
           </button>
           <button @click="clear" class="btn btn-sm">Clear</button>
           <div class="form-group">
-            <label for="speed">Speed: </label>
+            <label for="speed">Speed:</label>
             <input
               type="range"
               id="speed"
@@ -30,7 +25,7 @@
             {{ config.speed }}
           </div>
           <div class="form-group">
-            <label for="speed">Vertical: </label>
+            <label for="speed">Vertical:</label>
             <input
               type="number"
               v-model="vertical_count"
@@ -38,7 +33,7 @@
             />
           </div>
           <div class="form-group">
-            <label for="speed">Horizontal: </label>
+            <label for="speed">Horizontal:</label>
             <input
               type="number"
               v-model="horizontal_count"
@@ -46,9 +41,9 @@
             />
           </div>
 
-          <span class="badge badge-success"
-            >{{ config.alive_count }} Alive</span
-          >
+          <span class="badge badge-success">
+            {{ config.alive_count }} Alive
+          </span>
           <span class="badge badge-danger">{{ config.dead_count }} Dead</span>
         </div>
         <table border="1">
@@ -73,21 +68,18 @@
           </tr>
         </table>
       </div>
-      <div class="author">
-        <b>Author` </b>
-        <a href="http://minasyan.info" target="_blank">Manuk Minasyan</a>
-      </div>
     </div>
   </div>
 </template>
 <script src="js/vue.min.js"></script>
 <script>
+/* eslint-disable */
 export default {
   name: "App",
   components: {},
   data() {
     return {
-      name: "Devops GameOfLife Nicolas Gerard - Lucas Borcheton",
+      name: "Devops GameOfLife Nicolas Gerard - Lucas Brocheton",
       config: {
         play: false,
         speed: 1000,
@@ -102,11 +94,11 @@ export default {
     };
   },
   watch: {
-    vertical_count: function (val) {
+    vertical_count: function(val) {
       this.vertical_count = parseInt(val);
       this.clear();
     },
-    horizontal_count: function (val) {
+    horizontal_count: function(val) {
       this.horizontal_count = parseInt(val);
       this.clear();
     },
@@ -220,7 +212,7 @@ export default {
         this.getNeighbor(ver_index - 1, hor_index + 1),
       ];
 
-      neighbors.forEach(function (cell) {
+      neighbors.forEach(function(cell) {
         if (cell.live) count++;
       });
 
