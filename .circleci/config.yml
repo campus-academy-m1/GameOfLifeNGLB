@@ -7,16 +7,24 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: npm install
-      - run: npm test
+      - run: 
+          name: Install node modules
+          command: npm install
+      - run: 
+          name: Run unit tests
+          command: npm test
   coverage:
     docker:
       - image: node:14
     working_directory: ~/repo
     steps:
       - checkout
-      - run: npm install
-      - run: npm run coverage
+      - run: 
+          name: Install node modules
+          command: npm install
+      - run:
+          name: Run coverage
+          command: npm run coverage
       - store_artifacts:
           path: coverage
   
@@ -24,8 +32,12 @@ jobs:
     machine: true
     steps:
       - checkout
-      - run: docker build -t lucasbrocheton/gameoflife-nge-lbr .
-      - run: docker save -o image.tar lucasbrocheton/gameoflife-nge-lbr
+      - run:
+          name: Build docker image
+          command: docker build -t lucasbrocheton/gameoflife-nge-lbr .
+      - run:
+          name: Save docker image
+          command: docker save -o image.tar lucasbrocheton/gameoflife-nge-lbr
       - persist_to_workspace:
           root: .
           paths:
@@ -35,9 +47,15 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
-      - run: docker load -i /tmp/workspace/image.tar
-      - run: echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-      - run: docker push lucasbrocheton/gameoflife-nge-lbr
+      - run:
+          name: Load docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Login to docker hub
+          command: echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+      - run:
+          name: Push docker image to docker hub
+          command: docker push lucasbrocheton/gameoflife-nge-lbr
 
 workflows:
   version: 2
