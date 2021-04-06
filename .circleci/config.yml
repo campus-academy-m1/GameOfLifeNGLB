@@ -12,13 +12,14 @@ jobs:
       - run: npm run coverage
       - store_artifacts:
           path: coverage
+  
   build:
-    docker:
-      - image: node:14
-    working_directory: ~/repo
+    machine: true
     steps:
       - checkout
-      - run: npm build
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      - run: docker build -t lucasbrocheton/gameoflife-nge-lbr .
+      - run: docker push lucasbrocheton/gameoflife-nge-lbr
 
 workflows:
   version: 2
