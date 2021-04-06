@@ -17,7 +17,7 @@ jobs:
     machine: true
     steps:
       - checkout
-      - run: docker login --username $DOCKER_USER --password-stdin $DOCKER_PASSWORD
+      - run: echo $DOCKER_PASSWORD | docker login --username $DOCKER_USER --password-stdin
       - run: docker build -t lucasbrocheton/gameoflife-nge-lbr .
       - run: docker push lucasbrocheton/gameoflife-nge-lbr
 
