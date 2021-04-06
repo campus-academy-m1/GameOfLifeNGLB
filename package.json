@@ -7,6 +7,7 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test": "nyc vue-cli-service test:unit --timeout=1000",
+    "coverage": "nyc report --reporter=lcov --reporter=text-summary",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
