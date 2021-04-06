@@ -6,7 +6,7 @@ name: Node.js CI
 on: [push]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     strategy:
@@ -16,9 +16,41 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm install
-      - run: npm test
+          
+      - name: npm install
+        run: npm install
+        
+      - name: Run test
+        run: npm test
+
+  coverage:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [14.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+          
+      - name: npm install
+        run: npm install
+      
+      - name: Run coverage
+        run: npm run coverage
+        
+      - name: Upload artifacts
+        uses: ./
+        with:
+          path: coverage
